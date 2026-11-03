@@ -69,3 +69,47 @@ button {
 button:hover {
     background-color: #245e51;
 }
+/* Make form fields fit their containers */
+input[type="text"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+}
+
+/* Show a clear outline when using the keyboard */
+input:focus-visible,
+select:focus-visible,
+textarea:focus-visible,
+button:focus-visible {
+    outline: 3px solid #2e7d6b;
+    outline-offset: 2px;
+}
+
+/* Adjust layout for smaller screens */
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    form {
+        padding: 15px;
+    }
+
+    fieldset {
+        padding: 12px;
+    }
+
+    legend {
+        font-size: 18px;
+    }
+
+    button {
+        width: 100%;
+    }
+}
