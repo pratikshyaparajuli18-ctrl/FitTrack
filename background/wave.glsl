@@ -53,7 +53,7 @@ float contour(float h) {
   return 1.0 - smoothstep(0.0, width * 0.8, d);
 }
 
-// Applying gravity and a random warping of the contour lines around the mouse
+// Applying gravity around the mouse to make contour lines disappear
 float mouse_distortion(vec2 p) {
   vec2 mouse = (u_mouse - u_resolution * 0.5) / u_resolution.y;
 
@@ -74,6 +74,7 @@ void main() {
   vec2 p = (gl_FragCoord.xy - u_resolution * 0.5) / u_resolution.y;
 
   float depth = mouse_distortion(p);
+  // wrap contour lines around mouse
   float h = height(p) - depth * 0.1;
 
   float lines = contour(h);

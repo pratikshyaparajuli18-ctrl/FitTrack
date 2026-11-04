@@ -96,6 +96,27 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+.header {
+  display: felx;
+  flex-direction: row;
+}
+
+/* Images should have a max and min size */
+.left-pane {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+/* Same idea, images should have max and min sizes */
+/* middle column in this pane should be a flexbox maybe? */
+/* the left and right side should not need any grid or flexbox */
+.right-pane {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+}
+
 /* Adjust layout for smaller screens */
 @media (max-width: 600px) {
   body {
