@@ -54,6 +54,7 @@ legend {
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="password"],
 select,
 textarea {
   padding: 10px;
@@ -82,6 +83,7 @@ button:hover {
 input[type="text"],
 input[type="email"],
 input[type="number"],
+input[type="password"],
 select,
 textarea {
   width: 100%;
