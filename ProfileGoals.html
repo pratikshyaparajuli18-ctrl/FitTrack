@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>FitTrack - Fitness Profile</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="background/background.js" defer></script>
+  </head>
+  <body>
+    <!-- no touch  -->
+    <canvas id="background" data-shader="background/wave.glsl"></canvas>
+
+    <h1>FitTrack</h1>
+    <p>Personal Fitness Profile and Goals</p>
+    <form>
+      <fieldset>
+        <legend>Personal Information</legend>
+        <label for="fullname">Full Name</label>
+        <input type="text" id="fullname" name="fullname" required />
+
+        <br /><br />
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required />
+
+        <br /><br />
+        <label for="age">Age:</label>
+        <input type="number" id="age" name="age" min="1" max="120" required />
+
+        <br /><br />
+        <label for="height">Height (cm):</label>
+        <input
+          type="number"
+          id="height"
+          name="height"
+          min="50"
+          max="250"
+          required
+        />
+
+        <br /><br />
+        <label for="weight">Weight (kg):</label>
+        <input
+          type="number"
+          id="weight"
+          name="weight"
+          min="20"
+          max="300"
+          step="0.1"
+          required
+        />
+      </fieldset>
+      <br />
+
+      <fieldset>
+        <legend>Fitness Goals</legend>
+
+        <p>Select your main fitness goal:</p>
+
+        <input
+          type="radio"
+          id="weightloss"
+          name="goal"
+          value="weightloss"
+          required
+        />
+        <label for="weightloss">Weight Loss</label>
+
+        <br />
+        <input type="radio" id="musclegain" name="goal" value="musclegain" />
+        <label for="musclegain">Muscle Gain</label>
+
+        <br />
+        <input type="radio" id="endurance" name="goal" value="endurance" />
+        <label for="endurance">Improve Endurance</label>
+
+        <br /><br />
+        <label for="experience">Experience Level:</label>
+        <select id="experience" name="experience" required>
+          <option value="">Select your level</option>
+          <option value="beginner">Beginner</option>
+          <option value="intermediate">Intermediate</option>
+          <option value="advanced">Advanced</option>
+        </select>
+        <br /><br />
+        <p>Preferred Workout Types:</p>
+
+        <input type="checkbox" id="cardio" name="workout" value="cardio" />
+        <label for="cardio">Cardio</label>
+
+        <br />
+        <input type="checkbox" id="strength" name="workout" value="strength" />
+        <label for="strength">Strength Training</label>
+
+        <br />
+        <input type="checkbox" id="yoga" name="workout" value="yoga" />
+        <label for="yoga">Yoga</label>
+
+        <br /><br />
+        <label for="shortgoal">Short-Term Fitness Goal:</label>
+        <br />
+        <textarea
+          id="shortgoal"
+          name="shortgoal"
+          rows="4"
+          cols="40"
+          maxlength="200"
+          required
+        ></textarea>
+
+        <br /><br />
+        <label for="longgoal">Long-Term Fitness Goal:</label>
+        <br />
+        <textarea
+          id="longgoal"
+          name="longgoal"
+          rows="4"
+          cols="40"
+          maxlength="300"
+          required
+        ></textarea>
+      </fieldset>
+
+      <br />
+      <button type="submit">Submit Fitness Profile</button>
+    </form>
+    <script src="script.js"></script>
+  </body>
+</html>
