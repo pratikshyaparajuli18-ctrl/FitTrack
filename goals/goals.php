@@ -23,6 +23,11 @@ if (empty($_SESSION["user_id"])) {
 <body>
     <h1>FitTrack Fitness Goals</h1>
 
+<p>
+    <a href="view_goals.php">View My Goals</a>
+</p>
+
+
     <form action="save_goal.php" method="POST">
 
 <input type="hidden" name="csrf_token"
