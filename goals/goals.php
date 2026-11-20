@@ -1,6 +1,11 @@
 <?php
 session_start();
 
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
+
 if (empty($_SESSION["user_id"])) {
     http_response_code(403);
     exit("Please log in to add a goal.");
@@ -19,6 +24,10 @@ if (empty($_SESSION["user_id"])) {
     <h1>FitTrack Fitness Goals</h1>
 
     <form action="save_goal.php" method="POST">
+
+<input type="hidden" name="csrf_token"
+       value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
         <label for="goal_type">Goal Type:</label>
         <select name="goal_type" id="goal_type" required>
             <option value="">Select a goal</option>

@@ -1,5 +1,10 @@
 <?php
 session_start();
+
+if (empty($_SESSION["csrf_token"])) {
+    $_SESSION["csrf_token"] = bin2hex(random_bytes(32));
+}
+
 require_once "db_connect.php";
 
 $user_id = $_SESSION["user_id"] ?? null;
@@ -53,6 +58,10 @@ $goals = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     
 <td>
     <form action="update_goal.php" method="POST">
+
+<input type="hidden" name="csrf_token"
+       value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
         <input type="hidden" name="goal_id"
                value="<?= (int)$goal['goal_id'] ?>">
 
@@ -69,6 +78,10 @@ $goals = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <td>
     <form action="delete_goal.php" method="POST"
           onsubmit="return confirm('Are you sure you want to delete this goal?');">
+
+<input type="hidden" name="csrf_token"
+       value="<?= htmlspecialchars($_SESSION['csrf_token'], ENT_QUOTES, 'UTF-8') ?>">
+
 
         <input type="hidden" name="goal_id"
                value="<?= (int)$goal['goal_id'] ?>">

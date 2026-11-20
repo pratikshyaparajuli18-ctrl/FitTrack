@@ -7,6 +7,17 @@ if ($_SERVER["REQUEST_METHOD"] !== "POST") {
     exit("Method not allowed.");
 }
 
+
+if (
+    empty($_SESSION["csrf_token"]) ||
+    !is_string($_POST["csrf_token"] ?? null) ||
+    !hash_equals($_SESSION["csrf_token"], $_POST["csrf_token"])
+) {
+    http_response_code(403);
+    exit("Invalid security token.");
+}
+
+
 // Goals must belong to an authenticated user.
 // Dylon's login system will need to set this session value.
 $user_id = $_SESSION["user_id"] ?? null;
