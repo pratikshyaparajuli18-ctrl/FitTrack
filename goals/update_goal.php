@@ -41,7 +41,4 @@ $stmt->execute([$current, $goal_id, $user_id]);
 
 header("Location: view_goals.php");
 exit;
-
-header("Location: view_goals.php");
-exit;
 ?>

@@ -36,5 +36,6 @@ $stmt = $pdo->prepare(
 
 $stmt->execute([$user_id, $goal_type, $target, $current]);
 
-echo "Fitness goal saved successfully!";
+header("Location: view_goals.php");
+exit;
 ?>

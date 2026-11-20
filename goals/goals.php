@@ -1,6 +1,12 @@
 <?php
-require_once "db_connect.php";
+session_start();
+
+if (empty($_SESSION["user_id"])) {
+    http_response_code(403);
+    exit("Please log in to add a goal.");
+}
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
