@@ -6,7 +6,8 @@ RUN apt-get update && apt-get install -y \
     zip \
     unzip \
     && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    docker-php-ext-install mysqli && docker-php-ext-enable mysqli
 
 RUN a2enmod rewrite
 
