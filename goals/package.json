@@ -1,4 +1,7 @@
 {
   "name": "FitTrack",
-  "version": "1.0.0"
+  "version": "1.0.0",
+  "scipts": {
+    "start": "node index.php"
+  }
 }
