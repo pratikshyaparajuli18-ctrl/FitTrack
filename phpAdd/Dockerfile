@@ -5,9 +5,10 @@ RUN apt-get update && apt-get install -y \
     libpq-dev \
     zip \
     unzip \
-    && docker-php-ext-install pdo pdo_pgsql pdo_mysql \
-    && rm -rf /var/lib/apt/lists/* \
-    docker-php-ext-install mysqli && docker-php-ext-enable mysqli
+    && docker-php-ext-install pdo pdo_pgsql pdo_mysql mysqli\
+    && docker-php-ext-enable mysqli \
+    && rm -rf /var/lib/apt/lists/*
+    
 
 RUN a2enmod rewrite
 
