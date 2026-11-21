@@ -1,0 +1,78 @@
+<?php
+	
+//start the session 
+session_start();
+if(!isset($_SESSION['userkey'])) {
+	$_SESSION['userkey']='';
+}
+
+if ($_SESSION['userkey'] != '') {
+	$_SESSION['logged'] = true;
+} else {
+	$_SESSION['logged'] = false;
+}
+	
+?>
+
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FitTrack</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="background/background.js" defer></script>
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <canvas id="background" data-shader="background/wave.glsl"></canvas>
+
+    <div class="page">
+      <header class="banner">
+        <nav class="menu">
+          <a href="index.html">Home</a>
+          <a>Plans</a>
+          <a>Contact</a>
+        </nav>
+		<?php if ($_SESSION['logged']): ?>
+			<a class="login" href="SignOut.php">Log Out</a>
+		<?php else: ?>
+			<a class="login" href="SignIn.php">Log In</a>
+		<?php endif; ?>
+      </header>
+
+      <main class="layout" id="main">
+        <nav class="left-pane" aria-label="Workouts">
+          <button class="workout active" type="button">Workout 1</button>
+          <button class="workout" type="button">Workout 2</button>
+          <button class="workout" type="button">Workout 3</button>
+          <button class="workout" type="button">Workout 4</button>
+          <button class="workout" type="button">Workout 5</button>
+        </nav>
+
+        <section class="right-pane">
+          <div class="info">
+            <h1 id="workout-name">Workout 1</h1>
+            <p id="workout-info">Information about Workout 1</p>
+          </div>
+
+          <div class="images">
+            <button class="image active" type="button">Image 1</button>
+            <button class="image" type="button">Image 2</button>
+            <button class="image" type="button">Image 3</button>
+            <button class="image" type="button">Image 4</button>
+          </div>
+
+          <div class="media">
+            <h2>Pictures/Videos</h2>
+            <div class="main-image" id="current-image">Workout 1 Image</div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
