@@ -1,3 +1,8 @@
+<?php
+	session_start();
+?>
+
+
 <!DOCTYPE html>	
 <html>
 	<head>
@@ -23,7 +28,13 @@
 				<br></br>
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required />
-				<br></br>
+				<?
+					if (isset($_SESSION["retry"])){
+					<br></br>
+					} else {
+					<p>Invalid Log in information.</p>
+					}
+				?>
 				<br></br>
 				<p><a href="SignUp.php">don't have an account?</a></p>
 				<button type="submit" name="submit">Log In</button>
