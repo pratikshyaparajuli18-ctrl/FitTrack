@@ -21,7 +21,7 @@ DEFINE("pass", $pass);
 DEFINE("db", $db);
 
 try {
-    $pdo = new PDO($dsn, $user, $pass, [
+    $pdo = new PDO($connString, $user, $pass, [
         PDO::ATTR_ERRMODE            => PDO::ERRMODE_EXCEPTION,
         PDO::ATTR_DEFAULT_FETCH_MODE => PDO::FETCH_ASSOC,
     ]);
