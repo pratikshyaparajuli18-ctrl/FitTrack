@@ -10,14 +10,14 @@ if(isset($_POST['submit']))
 	$password = trim($_POST['password']);
 	
 	//get the userkey from the newly created entry
-	$query = $pdo->prepare("SELECT UID FROM users WHERE username = :user LIMIT 1");
+	$query = $pdo->prepare('SELECT UID FROM users WHERE username = :user LIMIT 1');
 	$query->execute([
 					':user' => $username
 	]);
 	$user = $query->fetch(PDO::FETCH_ASSOC);
 
 	if ($user) {
-		$_SESSION['userkey'] = $user['UID'];
+		$_SESSION['userkey'] = $user['uid'];
 		header("Location: index.php");
 		exit;
 	} else {
