@@ -14,6 +14,7 @@ if(isset($_POST['submit']))
 	$query->execute([
 					':user' => $username
 	]);
+	$user = $query->fetch(PDO::FETCH_ASSOC);
 
 	if ($user) {
 		$_SESSION['userkey'] = $user['UID'];
