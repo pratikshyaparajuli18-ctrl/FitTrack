@@ -8,7 +8,7 @@
 //connect to the db
 
 $host = getenv('HOST');
-$port = getenv('PORT')
+$port = getenv('PORT');
 $db = getenv('DATABASE');
 $user = getenv('USERNAME');
 $pass = getenv('PASSWORD');
