@@ -15,13 +15,13 @@
 	$result = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	if(!empty($result)) {
-		$_SESSION['retry2'] = 'retry';
-		header("Location: SignUp.php");
+		$_SESSION['userkey'] = $result['uid'];
+		header("Location: ProfileGoals.php");
 		exit();
 	} 
 	else {
-		$_SESSION['userkey'] = $result['uid'];
-		header("Location: ProfileGoals.php");
+		$_SESSION['retry2'] = 'retry';
+		header("Location: SignUp.php");
 		exit();
 	}
 ?>
