@@ -1,9 +1,3 @@
-<html>
-
-<head></head>
-
-<body>
-
 <?php
 //connect to the db
 
@@ -39,5 +33,3 @@ $dbconn = new mysqli(host, user, pass, db);
 */	
 
 ?>
-</body>
-</html>
