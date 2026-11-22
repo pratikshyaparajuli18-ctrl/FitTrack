@@ -6,7 +6,7 @@ session_start();
 require_once('FTDBconn.php');
 
 $stmt = $pdo->prepare("CREATE TABLE fitness_goals (
-    goal_id INT INCREMENT BY 1 PRIMARY KEY,
+    goal_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
     goal_type VARCHAR(50) NOT NULL,
     target_value DECIMAL(10,2) NOT NULL,
