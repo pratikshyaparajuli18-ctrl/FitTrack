@@ -4,9 +4,6 @@
 session_start();
 	
 require_once('FTDBconn.php');
-	
-$username = trim($_POST['username']);
-$password = trim($_POST['password']);
 
 $stmt = $pdo->prepare('CREATE TABLE users (
   UID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1000 INCREMENT BY 1) PRIMARY KEY,
