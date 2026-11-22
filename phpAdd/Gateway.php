@@ -19,8 +19,6 @@
 		exit();
 	} 
 	else {
-		$_SESSION['UN'] = $username;
-		$_SESSION['PW'] = $password;
 		header("Location: ProfileGoals.php");
 		exit();
 	}
