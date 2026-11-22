@@ -17,7 +17,7 @@ if(isset($_POST['submit']))
 	]);
 	
 	//get result from select statement
-	$result= $query->fetchAll();
+	$result= $query->fetch();
 	$key = array_first($result);
 	
 	$_SESSION['userkey'] = $key;
