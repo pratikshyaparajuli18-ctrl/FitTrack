@@ -28,13 +28,11 @@
 				<br></br>
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required />
-				<?
-					if (isset($_SESSION["retry"])){ ?>
+				<? if (isset($_SESSION["retry"])){ ?>
 					<br></br>
 					<? } else { ?>
 					<p>Invalid Log in information.</p>
-					<?}
-				?>
+					<? } ?>
 				<br></br>
 				<p><a href="SignUp.php">don't have an account?</a></p>
 				<button type="submit" name="submit">Log In</button>
