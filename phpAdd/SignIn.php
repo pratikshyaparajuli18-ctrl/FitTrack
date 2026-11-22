@@ -28,7 +28,7 @@
 				<br></br>
 				<label for="password">Password:</label>
 				<input type="password" id="password" name="password" required />
-				<?php if (isset($_SESSION["retry"])): ?>
+				<?php if (isset($_SESSION['retry'])): ?>
 					<br></br>
 				<?php else: ?>
 					<p>Invalid Log in information.</p>
