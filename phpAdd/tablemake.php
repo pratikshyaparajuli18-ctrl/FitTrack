@@ -5,6 +5,7 @@ session_start();
 	
 require_once('FTDBconn.php');
 
+/*
 $stmt = $pdo->prepare("CREATE TABLE fitness_goals (
     goal_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     user_id INT NOT NULL,
@@ -15,7 +16,7 @@ $stmt = $pdo->prepare("CREATE TABLE fitness_goals (
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )");
 
-/*
+
 $stmt = $pdo->prepare('CREATE TABLE users (
   UID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1000 INCREMENT BY 1) PRIMARY KEY,
   username VARCHAR(20) UNIQUE NOT NULL,
