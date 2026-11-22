@@ -6,6 +6,9 @@
 	$username = trim($_POST['username']);
 	$password = trim($_POST['password']);
 
+	$query = $pdo->prepare('INSERT INTO users (username, password) VALUES (:user, :pass) ');
+	$query->execute([':user' => $username, ':pass' => $password]);
+
 	$stmt = $pdo->prepare('SELECT username FROM users WHERE username = :user');
 
 	$stmt->execute([':user' => 'active']);
