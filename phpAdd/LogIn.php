@@ -10,14 +10,15 @@ if(isset($_POST['submit']))
 	$password = trim($_POST['password']);
 	
 	//get the userkey from the newly created entry
-	$query = $dbconn->prepare("SELECT UID FROM users WHERE username = ? AND pass = ? LIMIT 1");
-	$query->bind_param("ss", $username, $password);
-	
-	$query->execute();
+	$query = $pdo->prepare("SELECT UID FROM users WHERE username = :user AND pass = :pass LIMIT 1");
+	$query->execute([
+					':user' => $username,
+					':pass' => $password
+	]);
 	
 	//get result from select statement
-	$result= $query->get_result();
-	$key = $result->fetch_assoc();
+	$result= $query->fetchAll();
+	$key = array_first($result);
 	
 	$_SESSION['userkey'] = $key;
 
