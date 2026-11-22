@@ -10,9 +10,10 @@ if(isset($_POST['submit']))
 	$password = trim($_POST['password']);
 	
 	//get the userkey from the newly created entry
-	$query = $pdo->prepare('SELECT UID FROM users WHERE username = :user LIMIT 1');
+	$query = $pdo->prepare('SELECT UID FROM users WHERE username = :user AND :pass LIMIT 1');
 	$query->execute([
-					':user' => $username
+					':user' => $username,
+					':pass' => $password
 	]);
 	$user = $query->fetch(PDO::FETCH_ASSOC);
 
