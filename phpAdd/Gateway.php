@@ -14,7 +14,8 @@
 	if(!empty($result)) {
 		header("Location: SignUp.php");
 		exit();
-	} else {
+	} 
+	else {
 		$_SESSION['UN'] = $username;
 		$_SESSION['PW'] = $password;
 		header("Location: ProfileGoals.php");
