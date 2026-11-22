@@ -13,7 +13,7 @@ $db = getenv('DATABASE');
 $user = getenv('USERNAME');
 $pass = getenv('PASSWORD');
 
-$connString = "pgsql:host=$host;port=$port;dbname=$db";
+$connString = "pgsql:host=$host;port=$port;dbname=$db;";
 
 DEFINE("host", $connString);
 DEFINE("user", $user);
