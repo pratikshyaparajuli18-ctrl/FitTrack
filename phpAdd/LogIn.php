@@ -10,19 +10,19 @@ if(isset($_POST['submit']))
 	$password = trim($_POST['password']);
 	
 	//get the userkey from the newly created entry
-	$query = $pdo->prepare("SELECT UID FROM users WHERE username = :user AND pass = :pass LIMIT 1");
+	$query = $pdo->prepare("SELECT UID FROM users WHERE username = :user LIMIT 1");
 	$query->execute([
-					':user' => $username,
-					':pass' => $password
+					':user' => $username
 	]);
-	
-	//get result from select statement
-	$result= $query->fetch();
-	$key = array_first($result);
-	
-	$_SESSION['userkey'] = $key;
 
-	header("Location: index.php");
+	if ($user) {
+		$_SESSION['userkey'] = $user['UID'];
+		header("Location: index.php");
+		exit;
+	} else {
+		$_SESSION['retry'] = "retry";
+		header("Location: SignIn.php");
+		exit;
+	}
 }
-exit;
 ?>
