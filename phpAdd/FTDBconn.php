@@ -7,10 +7,18 @@
 <?php
 //connect to the db
 
-DEFINE("host", "localhost");
-DEFINE("user","guest");
-DEFINE("pass","LeastPriv21");
-DEFINE("db","fittrackdb");
+$host = getenv('HOST');
+$port = getenv('PORT')
+$db = getenv('DATABASE');
+$user = getenv('USERNAME');
+$pass = getenv('PASSWORD');
+
+$connString = "pgsql:host=$host;port=$port;dbname=$db";
+
+DEFINE("host", $connString);
+DEFINE("user", $user);
+DEFINE("pass", $pass);
+DEFINE("db", $db);
 
 $dbconn = new mysqli(host, user, pass, db);
 	
