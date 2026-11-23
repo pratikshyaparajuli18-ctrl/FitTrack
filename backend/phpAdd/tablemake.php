@@ -5,6 +5,9 @@ session_start();
 	
 require_once('FTDBconn.php');
 
+$stmt= $pdo->prepare("SELECT * FROM users");
+
+
 /*
 $stmt = $pdo->prepare("CREATE TABLE fitness_goals (
     goal_id INT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
@@ -25,7 +28,9 @@ $stmt = $pdo->prepare('CREATE TABLE users (
 */
 
 $stmt->execute();
-$result = $stmt->fetchAll();
+$stmt->debugDumParams();
+
+//$result = $stmt->fetchAll();
 
 
 ?>
