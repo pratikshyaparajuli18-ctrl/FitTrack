@@ -20,7 +20,7 @@ if (
 
 // Goals must belong to an authenticated user.
 // Dylon's login system will need to set this session value.
-$user_id = $_SESSION["user_id"] ?? null;
+$user_id = $_SESSION["userkey"] ?? null;
 
 if (!$user_id) {
     http_response_code(403);
