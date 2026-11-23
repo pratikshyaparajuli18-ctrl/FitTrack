@@ -6,7 +6,7 @@ if (empty($_SESSION["csrf_token"])) {
 }
 
 
-if (empty($_SESSION["user_id"])) {
+if (empty($_SESSION["userkey"])) {
     http_response_code(403);
     exit("Please log in to add a goal.");
 }
