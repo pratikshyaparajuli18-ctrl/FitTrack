@@ -2,7 +2,7 @@
 session_start();
 require_once "db_connect.php";
 
-$user_id = $_SESSION["user_id"] ?? null;
+$user_id = $_SESSION["userkey"] ?? null;
 
 if (!$user_id) {
     http_response_code(403);
