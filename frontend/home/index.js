@@ -1,379 +1,227 @@
+const $ = (selector) => document.querySelector(selector);
+// textContent keeps names from being treated as html
+const element = (tag, text, class_name = "") =>
+  Object.assign(document.createElement(tag), {
+    textContent: text,
+    className: class_name,
+  });
 const asset_base = new URL(
   "/backend/exercises/exercise-images/",
   document.baseURI,
 );
-
-const workout_data_url = new URL(
-  "/frontend/home/workouts.json",
-  document.baseURI,
-);
-
-const workout_list = document.querySelector(".left-pane");
-const exercise_list = document.querySelector("#exercise-list");
-
-const workout_name = document.querySelector("#workout-name");
-const workout_info = document.querySelector("#workout-info");
-const exercise_name = document.querySelector("#exercise-name");
-const exercise_info = document.querySelector("#exercise-info");
-const main_image = document.querySelector("#current-image");
-
-let workouts = [];
-const exercise_by_id = new Map();
-
-let selected_workout = null;
-let selected_exercise = null;
-
-let animation_timer = null;
-let animation_generation = 0;
+const workout_list = $(".left-pane"),
+  exercise_list = $("#exercise-list"),
+  preview = $("#current-image");
+let workouts = [],
+  selected_workout = null,
+  animation_timer,
+  animation_version = 0;
+let catalog = new Map();
 
 async function fetch_json(url) {
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), 10000);
-
-  try {
-    const response = await fetch(url, {
-      signal: controller.signal,
-    });
-
-    if (!response.ok) {
-      throw new Error(`${url}: HTTP ${response.status}`);
-    }
-
-    const body = await response.text();
-
-    if (body.trimStart().startsWith("<")) {
-      throw new Error(
-        `The server returned HTML instead of JSON for ${response.url || url}. ` +
-          "Check this URL against the PHP document root and the file location.",
-      );
-    }
-
-    return JSON.parse(body);
-  } finally {
-    clearTimeout(timeout);
+  const response = await fetch(url, { signal: AbortSignal.timeout(10000) });
+  if (!response.ok) throw new Error(`${url}: HTTP ${response.status}`);
+  const body = await response.text();
+  // a bad path can return html even when the server reports a successful request
+  if (body.trimStart().startsWith("<")) {
+    throw new Error(
+      `Expected JSON but received HTML from ${response.url || url}`,
+    );
   }
+  return JSON.parse(body);
 }
 
-function make_button(label, class_name, on_click) {
-  const button = document.createElement("button");
-
-  button.type = "button";
-  button.className = class_name;
-  button.textContent = label;
-
-  if (on_click) {
-    button.addEventListener("click", on_click);
-  }
-
-  return button;
+function render_buttons(container, labels, class_name, select) {
+  container.replaceChildren(
+    ...labels.map((label, index) => {
+      const button = element("button", label, class_name);
+      button.type = "button";
+      // leaving out select makes the same renderer produce placeholder buttons
+      button.disabled = !select;
+      button.onclick = select ? () => select(index) : null;
+      return button;
+    }),
+  );
 }
 
-function list_placeholder(container, class_name, label) {
-  const button = make_button(label, class_name);
-  button.disabled = true;
-  container.replaceChildren(button);
+function activate(container, index) {
+  [...container.children].forEach((button, i) =>
+    button.classList.toggle("active", i === index),
+  );
 }
 
-function mark_active(container, matches) {
-  container.querySelectorAll("button").forEach((button) => {
-    button.classList.toggle("active", matches(button));
-  });
+function exercise_label(id) {
+  return (
+    catalog.get(id)?.name ||
+    id.replaceAll("-", " ").replace(/\b\w/g, (c) => c.toUpperCase())
+  );
 }
 
-function show_placeholder(title, message) {
-  const placeholder = document.createElement("div");
-  placeholder.className = "media-placeholder";
-
-  const heading = document.createElement("strong");
-  const description = document.createElement("p");
-
-  heading.textContent = title;
-  description.textContent = message;
-
-  placeholder.append(heading, description);
-  main_image.replaceChildren(placeholder);
+function reset_preview(
+  title = "Preview unavailable",
+  message = "Choose another exercise or workout.",
+) {
+  clearInterval(animation_timer);
+  animation_timer = null;
+  // invalidate images that are still loading for the previous selection
+  animation_version++;
+  const box = element("div", "", "media-placeholder");
+  box.append(element("strong", title), element("p", message));
+  preview.replaceChildren(box);
+  return animation_version;
 }
 
-function display_id(id) {
-  return id
-    .replaceAll("-", " ")
-    .replace(/\b\w/g, (letter) => letter.toUpperCase());
+function empty_page(title, message) {
+  selected_workout = null;
+  $("#workout-name").textContent = title;
+  $("#workout-info").textContent = message;
+  $("#exercise-name").textContent = "Exercise preview";
+  $("#exercise-info").textContent = "Choose a workout to see its exercises.";
+  render_buttons(workout_list, ["No workouts"], "workout");
+  render_buttons(exercise_list, ["No exercises"], "exercise");
+  reset_preview(title, message);
 }
 
-async function load_workouts() {
-  const [workout_result, catalog_result] = await Promise.allSettled([
-    fetch_json(workout_data_url),
-    fetch_json(new URL("exercises.json", asset_base)),
-  ]);
-
-  if (workout_result.status === "rejected") {
-    throw workout_result.reason;
-  }
-
-  workouts = workout_result.value.workouts;
-
-  if (!Array.isArray(workouts)) {
-    throw new Error("Expected a workouts array.");
-  }
-
-  const ids = new Set();
-
-  for (const workout of workouts) {
-    if (!workout.id || !workout.name || !Array.isArray(workout.exercises)) {
-      throw new Error("Each workout needs id, name, and exercises fields.");
-    }
-
-    if (ids.has(workout.id)) {
-      throw new Error(`Duplicate workout: ${workout.id}`);
-    }
-
-    ids.add(workout.id);
-
-    for (const entry of workout.exercises) {
-      if (typeof entry?.exercise_id !== "string") {
-        throw new Error(`Invalid exercise entry in ${workout.id}`);
-      }
-    }
-  }
-
-  if (
-    catalog_result.status === "fulfilled" &&
-    Array.isArray(catalog_result.value.exercises)
-  ) {
-    for (const exercise of catalog_result.value.exercises) {
-      exercise_by_id.set(exercise.id, exercise);
-    }
-  } else {
-    console.error("Exercise catalog unavailable:", catalog_result);
-  }
-
-  workout_list.replaceChildren();
-
-  for (const workout of workouts) {
-    const button = make_button(workout.name, "workout", () => {
-      select_workout(workout.id);
-    });
-
-    button.dataset.workoutId = workout.id;
-    workout_list.append(button);
-  }
-
-  if (workouts.length) {
-    select_workout(workouts[0].id);
-  } else {
-    show_empty_page("No workouts yet", "Your workouts will appear here.");
-  }
-}
-
-function select_workout(id) {
-  const workout = workouts.find((item) => item.id === id);
-
+function select_workout(index) {
+  const workout = workouts[index];
   if (!workout) return;
-
   selected_workout = workout;
-  selected_exercise = null;
-
-  workout_name.textContent = workout.name;
-
+  activate(workout_list, index);
   const count = workout.exercises.length;
-
-  workout_info.textContent = [
+  $("#workout-name").textContent = workout.name;
+  $("#workout-info").textContent = [
     workout.description,
     `${count} ${count === 1 ? "exercise" : "exercises"}`,
   ]
     .filter(Boolean)
     .join(" · ");
-
-  mark_active(workout_list, (button) => button.dataset.workoutId === id);
-
-  exercise_list.replaceChildren();
-
-  workout.exercises.forEach((entry, index) => {
-    const exercise = exercise_by_id.get(entry.exercise_id);
-    const label = exercise?.name || display_id(entry.exercise_id);
-
-    const button = make_button(label, "exercise", () => {
-      select_exercise(index);
-    });
-
-    button.dataset.exerciseIndex = String(index);
-    exercise_list.append(button);
-  });
-
-  if (count) {
-    select_exercise(0);
-  } else {
-    stop_image_animation();
-
-    exercise_name.textContent = "No exercises yet";
-    exercise_info.textContent = "This workout is empty.";
-
-    list_placeholder(exercise_list, "exercise", "No exercises");
-
-    show_placeholder("No exercise selected", "Add a movement to this workout.");
+  render_buttons(
+    exercise_list,
+    workout.exercises.map((e) => exercise_label(e.exercise_id)),
+    "exercise",
+    select_exercise,
+  );
+  if (count) select_exercise(0);
+  else {
+    $("#exercise-name").textContent = "No exercises yet";
+    $("#exercise-info").textContent = "This workout is empty.";
+    render_buttons(exercise_list, ["No exercises"], "exercise");
+    reset_preview("No exercise selected", "Add a movement to this workout.");
   }
 }
 
 function select_exercise(index) {
   const entry = selected_workout?.exercises[index];
-
   if (!entry) return;
-
-  const exercise = exercise_by_id.get(entry.exercise_id);
-  selected_exercise = exercise || null;
-
-  mark_active(
-    exercise_list,
-    (button) => Number(button.dataset.exerciseIndex) === index,
-  );
-
-  exercise_name.textContent = exercise?.name || display_id(entry.exercise_id);
-
-  const details = [];
-
-  if (exercise?.equipmentLabel) {
-    details.push(`Equipment: ${exercise.equipmentLabel}`);
-  }
-
-  const muscles = exercise?.muscles?.primary || [];
-
-  if (muscles.length) {
-    const names = muscles.map((tag) => tag.replaceAll("_", " ")).join(", ");
-
-    details.push(`Main muscles: ${names}`);
-  }
-
-  if (exercise?.level) {
-    details.push(`Difficulty: ${exercise.level}`);
-  }
-
-  if (entry.sets != null) {
-    details.push(`Sets: ${entry.sets}`);
-  }
-
-  if (entry.reps != null) {
-    details.push(`Reps: ${entry.reps}`);
-  }
-
-  if (entry.notes) {
-    details.push(entry.notes);
-  }
-
-  exercise_info.textContent =
+  const exercise = catalog.get(entry.exercise_id);
+  activate(exercise_list, index);
+  $("#exercise-name").textContent = exercise_label(entry.exercise_id);
+  // keep values like 0, but leave out missing or empty fields
+  const details = Object.entries({
+    Equipment: exercise?.equipmentLabel,
+    "Main muscles": (exercise?.muscles?.primary || [])
+      .join(", ")
+      .replaceAll("_", " "),
+    Difficulty: exercise?.level,
+    Sets: entry.sets,
+    Reps: entry.reps,
+  })
+    .filter(([, value]) => value != null && value !== "")
+    .map(([label, value]) => `${label}: ${value}`);
+  if (entry.notes) details.push(entry.notes);
+  $("#exercise-info").textContent =
     details.join(" · ") || "Exercise details are unavailable.";
-
   animate_images(exercise);
-}
-
-function stop_image_animation() {
-  clearInterval(animation_timer);
-  animation_timer = null;
-  animation_generation++;
 }
 
 function preload_image(exercise, frame) {
   return new Promise((resolve, reject) => {
     const image = new Image();
-    image.alt = `${exercise.name}: ${frame} position`;
-
-    const finish = (error) => {
-      clearTimeout(timeout);
-      image.onload = null;
-      image.onerror = null;
-
-      if (error) {
-        reject(error);
-      } else {
-        resolve(image);
-      }
+    // load, error and timeout all need to clear the same timer and handlers
+    const finish = (success) => {
+      clearTimeout(timer);
+      image.onload = image.onerror = null;
+      success
+        ? resolve(image)
+        : reject(new Error("Image unavailable or timed out"));
     };
-
-    const timeout = setTimeout(() => {
-      finish(new Error("Image timed out"));
-    }, 12000);
-
-    image.onload = () => finish();
-    image.onerror = () => finish(new Error("Image unavailable"));
-
+    const timer = setTimeout(() => finish(false), 12000);
+    image.onload = () => finish(true);
+    image.onerror = () => finish(false);
+    image.alt = `${exercise.name}: ${frame} position`;
     image.src = new URL(exercise.images[frame], asset_base).href;
   });
 }
 
 async function animate_images(exercise) {
-  stop_image_animation();
-
-  const generation = animation_generation;
-
   const frames = (exercise?.frames || []).filter(
     (frame) => exercise.images?.[frame],
   );
-
-  if (!frames.length) {
-    show_placeholder(
-      "Preview unavailable",
-      "Choose another exercise or workout.",
-    );
-    return;
-  }
-
-  show_placeholder(
+  if (!frames.length) return reset_preview();
+  const version = reset_preview(
     "Loading preview…",
     "Your exercise images will appear here.",
   );
-
+  // preload to avoid flickering, and keep working frames if one fails
   const results = await Promise.allSettled(
     frames.map((frame) => preload_image(exercise, frame)),
   );
-
-  // A newer selection may have replaced this exercise while loading.
-  if (generation !== animation_generation) return;
-
+  // another exercise may have been selected while these images were loading
+  if (version !== animation_version) return;
   const images = results
     .filter((result) => result.status === "fulfilled")
     .map((result) => result.value);
-
-  if (!images.length) {
-    show_placeholder(
-      "Preview unavailable",
-      "Choose another exercise or workout.",
-    );
-    return;
-  }
-
+  if (!images.length) return reset_preview();
   let index = 0;
+  // % wraps back to the start and index++ advances after choosing
+  const show = () => preview.replaceChildren(images[index++ % images.length]);
+  show();
+  if (images.length > 1) animation_timer = setInterval(show, 1000);
+}
 
-  const show_frame = () => {
-    main_image.replaceChildren(images[index]);
-    index = (index + 1) % images.length;
-  };
-
-  show_frame();
-
-  if (images.length > 1) {
-    animation_timer = setInterval(show_frame, 1000);
+async function load_workouts() {
+  // a failed image catalog should not discard the workout definitions
+  const [routine_data, exercise_data] = await Promise.allSettled([
+    fetch_json("/frontend/home/workouts.json"),
+    fetch_json(new URL("exercises.json", asset_base)),
+  ]);
+  if (routine_data.status === "rejected") throw routine_data.reason;
+  workouts = routine_data.value.workouts;
+  if (!Array.isArray(workouts)) throw new Error("Expected a workouts array.");
+  for (const workout of workouts) {
+    if (
+      !workout?.id ||
+      !workout.name ||
+      !Array.isArray(workout.exercises) ||
+      workout.exercises.some((entry) => typeof entry?.exercise_id !== "string")
+    ) {
+      throw new Error(`Invalid workout: ${workout?.id || "missing id"}`);
+    }
   }
+  if (new Set(workouts.map((workout) => workout.id)).size !== workouts.length) {
+    throw new Error("Duplicate workout IDs.");
+  }
+  if (
+    exercise_data.status === "fulfilled" &&
+    Array.isArray(exercise_data.value.exercises)
+  ) {
+    catalog = new Map(
+      exercise_data.value.exercises.map((exercise) => [exercise.id, exercise]),
+    );
+  } else console.error("Exercise catalog unavailable:", exercise_data);
+  render_buttons(
+    workout_list,
+    workouts.map((workout) => workout.name),
+    "workout",
+    select_workout,
+  );
+  if (workouts.length) select_workout(0);
+  else empty_page("No workouts yet", "Your workouts will appear here.");
 }
 
-function show_empty_page(title, message) {
-  stop_image_animation();
-
-  selected_workout = null;
-  selected_exercise = null;
-
-  workout_name.textContent = title;
-  workout_info.textContent = message;
-
-  exercise_name.textContent = "Exercise preview";
-  exercise_info.textContent = "Choose a workout to see its exercises.";
-
-  list_placeholder(workout_list, "workout", "No workouts");
-  list_placeholder(exercise_list, "exercise", "No exercises");
-
-  show_placeholder(title, message);
-}
-
+render_buttons(workout_list, ["Loading…"], "workout");
+render_buttons(exercise_list, ["Loading…"], "exercise");
 load_workouts().catch((error) => {
-  console.error("Workouts unavailable:", error);
-
-  show_empty_page("Workouts unavailable", "Refresh the page to try again.");
+  console.error(error);
+  empty_page("Workouts unavailable", "Refresh the page to try again.");
 });

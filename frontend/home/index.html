@@ -3,16 +3,15 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>FitTrack</title>
-
     <link rel="stylesheet" href="/frontend/styles.css" />
-
     <script src="/background/background.js" defer></script>
     <script src="/frontend/home/index.js" defer></script>
   </head>
   <body>
     <canvas id="background" data-shader="/background/wave.glsl"></canvas>
+    <!-- background.js looks for this if the animation cannot load -->
+    <div id="shader-error" hidden></div>
 
     <div class="page">
       <header class="banner">
@@ -21,22 +20,23 @@
           <a href="/frontend/home/plans.html">Plans</a>
           <a href="#contact">Contact</a>
 
-          <a class="login" href="/frontend/signin-up/SignIn.html">Login</a>
-          <a class="signup" href="/frontend/signin-up/SignUp.html">Sign Up</a>
+          <div class="account-links">
+            <a href="/frontend/signin-up/SignIn.html">Login</a>
+            <a href="/frontend/signin-up/SignUp.html">Sign Up</a>
+          </div>
         </nav>
       </header>
 
+      <!-- index.js fills the empty workout and exercise lists -->
       <main class="layout" id="main">
-        <!-- Workout buttons made from workouts.json -->
         <nav class="left-pane"></nav>
 
         <section class="right-pane">
           <div class="info">
-            <h1 id="workout-name">Loading workouts</h1>
-            <p id="workout-info" role="status"></p>
+            <h1 id="workout-name">Loading workouts…</h1>
+            <p id="workout-info"></p>
           </div>
 
-          <!-- Get the exercises that belong to the workout -->
           <nav class="exercise-list" id="exercise-list"></nav>
 
           <section class="exercise-info">
@@ -44,11 +44,10 @@
             <p id="exercise-info"></p>
           </section>
 
-          <!-- Image buttons are made from selected exercise -->
-          <nav class="images"></nav>
-
-          <section class="media">
-            <div class="main-image" id="current-image"></div>
+          <section class="media" id="current-image">
+            <p class="media-placeholder">
+              Your exercise preview will appear here.
+            </p>
           </section>
         </section>
       </main>
