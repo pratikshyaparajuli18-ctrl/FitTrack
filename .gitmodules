@@ -1,3 +1,0 @@
-[submodule "backend/exercises/exercise-images"]
-	path = backend/exercises/exercise-images
-	url = git@github.com:MarvinNazari/exercise-images.git

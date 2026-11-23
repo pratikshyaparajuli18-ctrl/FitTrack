@@ -6,10 +6,10 @@
 
     <title>FitTrack</title>
 
-    <link rel="stylesheet" href="styles.css" />
+    <link rel="stylesheet" href="/frontend/styles.css" />
 
-    <script src="//background/background.js" defer></script>
-    <script src="index.js" defer></script>
+    <script src="/background/background.js" defer></script>
+    <script src="/frontend/home/index.js" defer></script>
   </head>
   <body>
     <canvas id="background" data-shader="/background/wave.glsl"></canvas>
@@ -17,12 +17,13 @@
     <div class="page">
       <header class="banner">
         <nav class="menu">
-          <a href="index.html">Home</a>
-          <a>Plans</a>
-          <a>Contact</a>
+          <a href="/frontend/home/">Home</a>
+          <a href="/frontend/home/plans.html">Plans</a>
+          <a href="#contact">Contact</a>
+
+          <a class="login" href="/frontend/signin-up/SignIn.html">Login</a>
+          <a class="signup" href="/frontend/signin-up/SignUp.html">Sign Up</a>
         </nav>
-        <a class="login" href="SignIn.html">Login</a>
-        <a class="signup" href="SignUp.html">Sign Up</a>
       </header>
 
       <main class="layout" id="main">
@@ -52,5 +53,11 @@
         </section>
       </main>
     </div>
+
+    <footer class="contact-footer" id="contact">
+      <h2>Contact FitTrack</h2>
+      <p>Have a question or suggestion? Get in touch.</p>
+      <a href="mailto:contact@example.com">contact@example.com</a>
+    </footer>
   </body>
 </html>

@@ -8,6 +8,10 @@
   background: var(--bg-color);
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   position: relative;
   z-index: 0;
@@ -137,7 +141,11 @@ button:focus-visible {
   pointer-events: none;
 }
 
+/* styling for main home page */
 .page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(100vh - 6vh - 40px);
   position: relative;
   z-index: 1;
   width: 95%;
@@ -146,6 +154,18 @@ button:focus-visible {
   margin: 3vh auto;
   padding: 16px;
   background: rgba(245, 247, 250, 0.85);
+}
+
+.page > main {
+  flex: 1;
+}
+
+.contact-footer {
+  margin-top: 32px;
+  padding: 24px 16px;
+  border-top: 1px solid #ccd8d1;
+  text-align: center;
+  scroll-margin-top: 24px;
 }
 
 .banner {
@@ -256,5 +276,146 @@ button:focus-visible {
 
   .info {
     grid-column: 1 / 3;
+  }
+}
+
+/* styling for plans page */
+.plans-page .banner {
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.plans-main {
+  padding: 20px 0;
+}
+
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin: 30px auto;
+}
+
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 28px;
+  border: 2px solid #d6dfda;
+  border-radius: 12px;
+  background: white;
+}
+
+.plan-card.premium {
+  border-color: var(--accent);
+}
+
+.plan-card h2 {
+  margin: 0;
+  color: var(--accent);
+}
+
+.plan-price {
+  margin: 12px 0;
+  font-size: 32px;
+  font-weight: bold;
+}
+
+.plan-price span {
+  color: #666666;
+  font-size: 14px;
+  font-weight: normal;
+}
+
+.plan-card ul {
+  flex: 1;
+  margin: 16px 0 24px;
+  padding-left: 20px;
+}
+
+.plan-button {
+  display: block;
+  padding: 12px 20px;
+  border-radius: 6px;
+  background: var(--accent);
+  color: white;
+  text-align: center;
+  text-decoration: none;
+}
+
+.plan-button:hover {
+  background: #245e51;
+}
+
+.plan-button:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+@media (max-width: 650px) {
+  .plans-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+#main.layout {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 20px;
+}
+
+#main .right-pane {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  grid-template-rows: auto auto auto auto;
+  grid-template-areas:
+    "info preview"
+    "exercises preview"
+    "details preview"
+    "buttons preview";
+  gap: 16px;
+  min-width: 0;
+}
+
+#main .right-pane > .info {
+  grid-area: info;
+}
+
+#main .right-pane > .exercise-list {
+  grid-area: exercises;
+}
+
+#main .right-pane > .exercise-info {
+  grid-area: details;
+}
+
+#main .right-pane > .images {
+  grid-area: buttons;
+}
+
+#main .right-pane > .media {
+  grid-area: preview;
+  min-width: 0;
+}
+
+#main .right-pane > * {
+  min-width: 0;
+}
+
+/* Stack the preview underneath on smaller screens. */
+@media (max-width: 700px) {
+  #main.layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  #main .right-pane {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-areas:
+      "info"
+      "exercises"
+      "details"
+      "buttons"
+      "preview";
   }
 }
