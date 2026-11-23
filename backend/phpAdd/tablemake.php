@@ -18,14 +18,14 @@ $stmt = $pdo->prepare("CREATE TABLE fitness_goals (
     status VARCHAR(20) NOT NULL DEFAULT 'active',
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 )");
-
+*/
 
 $stmt = $pdo->prepare('CREATE TABLE users (
   UID INTEGER GENERATED ALWAYS AS IDENTITY (START WITH 1000 INCREMENT BY 1) PRIMARY KEY,
   username VARCHAR(20) UNIQUE NOT NULL,
   pass VARCHAR(20) NOT NULL
 )');
-*/
+
 
 $stmt->execute();
 $stmt->debugDumpParams();
