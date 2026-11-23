@@ -28,7 +28,7 @@ $stmt = $pdo->prepare('CREATE TABLE users (
 */
 
 $stmt->execute();
-$stmt->debugDumParams();
+$stmt->debugDumpParams();
 
 //$result = $stmt->fetchAll();
 
