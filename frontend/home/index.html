@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>FitTrack</title>
+
+    <link rel="stylesheet" href="styles.css" />
+
+    <script src="//background/background.js" defer></script>
+    <script src="index.js" defer></script>
+  </head>
+  <body>
+    <canvas id="background" data-shader="/background/wave.glsl"></canvas>
+
+    <div class="page">
+      <header class="banner">
+        <nav class="menu">
+          <a href="index.html">Home</a>
+          <a>Plans</a>
+          <a>Contact</a>
+        </nav>
+        <a class="login" href="SignIn.html">Login</a>
+        <a class="signup" href="SignUp.html">Sign Up</a>
+      </header>
+
+      <main class="layout" id="main">
+        <!-- Workout buttons made from workouts.json -->
+        <nav class="left-pane"></nav>
+
+        <section class="right-pane">
+          <div class="info">
+            <h1 id="workout-name">Loading workouts</h1>
+            <p id="workout-info" role="status"></p>
+          </div>
+
+          <!-- Get the exercises that belong to the workout -->
+          <nav class="exercise-list" id="exercise-list"></nav>
+
+          <section class="exercise-info">
+            <h2 id="exercise-name"></h2>
+            <p id="exercise-info"></p>
+          </section>
+
+          <!-- Image buttons are made from selected exercise -->
+          <nav class="images"></nav>
+
+          <section class="media">
+            <div class="main-image" id="current-image"></div>
+          </section>
+        </section>
+      </main>
+    </div>
+  </body>
+</html>
