@@ -1,22 +1,34 @@
-
-
 <!DOCTYPE html>	
 <html>
 	<head>
 		<meta="UTF-8">
 		<title>FitTrack - Log In Page</title>
-		
+
 		<link href="styles.css" rel="stylesheet" />
 		<script src="background/background.js" defer></script>
-		
 	</head>
-	
+
 	<body>
-		
 		<!-- create the form for submission -->
 		<canvas id="background" data-shader="background/wave.glsl"></canvas>
-		
-		<br></br>
+
+      <header class="banner">
+        <nav class="menu">
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
+          <a href="#contact">Contact</a>
+
+          <div class="account-links">
+			<?php if ($_SESSION['logged']): ?>
+				<a class="login" href="SignOut.php">Log Out</a>
+			<?php else: ?>
+				<a class="login" href="SignIn.php">Log In</a>
+			<?php endif; ?>
+						<a class="login" href="SignUp.php">Sign Up</a>
+          </div>
+        </nav>
+      </header>
+
 		<form action="Gateway.php" method="post">
 			<fieldset>
 				<h1>Sign Up</h1>
@@ -33,6 +45,5 @@
 			</fieldset>
 		</form>
 	</body>
-	
+
 </html>
-	

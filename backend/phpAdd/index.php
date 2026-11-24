@@ -1,6 +1,6 @@
 <?php
-	
-//start the session 
+
+//start the session
 session_start();
 if(!isset($_SESSION['userkey'])) {
 	$_SESSION['userkey']='';
@@ -11,68 +11,71 @@ if ($_SESSION['userkey'] != '') {
 } else {
 	$_SESSION['logged'] = false;
 }
-	
-?>
 
+?>
 
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
     <title>FitTrack</title>
-
     <link rel="stylesheet" href="styles.css" />
-
     <script src="background/background.js" defer></script>
     <script src="index.js" defer></script>
   </head>
   <body>
-    <canvas id="background" data-shader="background/wave.glsl"></canvas>
+    <canvas id="background" data-shader="/background/wave.glsl"></canvas>
+    <!-- background.js looks for this if the animation cannot load -->
+    <div id="shader-error" hidden></div>
 
     <div class="page">
       <header class="banner">
         <nav class="menu">
-          <a href="index.html">Home</a>
-          <a>Plans</a>
-          <a>Contact</a>
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
+          <a href="#contact">Contact</a>
+
+          <div class="account-links">
+			<?php if ($_SESSION['logged']): ?>
+				<a class="login" href="SignOut.php">Log Out</a>
+			<?php else: ?>
+				<a class="login" href="SignIn.php">Log In</a>
+			<?php endif; ?>
+						<a class="login" href="SignUp.php">Sign Up</a>
+          </div>
         </nav>
-		<?php if ($_SESSION['logged']): ?>
-			<a class="login" href="SignOut.php">Log Out</a>
-		<?php else: ?>
-			<a class="login" href="SignIn.php">Log In</a>
-		<?php endif; ?>
       </header>
 
+      <!-- index.js fills the empty workout and exercise lists -->
       <main class="layout" id="main">
-        <nav class="left-pane" aria-label="Workouts">
-          <button class="workout active" type="button">Workout 1</button>
-          <button class="workout" type="button">Workout 2</button>
-          <button class="workout" type="button">Workout 3</button>
-          <button class="workout" type="button">Workout 4</button>
-          <button class="workout" type="button">Workout 5</button>
-        </nav>
+  <nav class="left-pane"></nav>
 
-        <section class="right-pane">
-          <div class="info">
-            <h1 id="workout-name">Workout 1</h1>
-            <p id="workout-info">Information about Workout 1</p>
-          </div>
+  <section class="right-pane">
+    <div class="workout-controls">
+      <div class="info">
+        <h1 id="workout-name">Loading workouts…</h1>
+        <p id="workout-info"></p>
+      </div>
 
-          <div class="images">
-            <button class="image active" type="button">Image 1</button>
-            <button class="image" type="button">Image 2</button>
-            <button class="image" type="button">Image 3</button>
-            <button class="image" type="button">Image 4</button>
-          </div>
-
-          <div class="media">
-            <h2>Pictures/Videos</h2>
-            <div class="main-image" id="current-image">Workout 1 Image</div>
-          </div>
-        </section>
-      </main>
+      <nav class="exercise-list" id="exercise-list"></nav>
     </div>
+
+    <div class="workout-preview">
+      <h2 class="exercise-title" id="exercise-name"></h2>
+
+      <section class="media" id="current-image"></section>
+
+      <p class="exercise-details" id="exercise-info"></p>
+    </div>
+  </section>
+</main>
+    </div>
+
+    <footer class="contact-footer" id="contact">
+      <h2>Contact FitTrack</h2>
+      <p>Have a question or suggestion? Get in touch.</p>
+      <a href="mailto:contact@example.com">contact@example.com</a>
+    </footer>
   </body>
 </html>

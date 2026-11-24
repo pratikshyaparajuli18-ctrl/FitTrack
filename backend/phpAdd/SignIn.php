@@ -2,23 +2,37 @@
 	session_start();
 ?>
 
-
-<!DOCTYPE html>	
+<!DOCTYPE html>
 <html>
 	<head>
 		<meta charset="UTF-8">
 		<title>FitTrack - Log In Page</title>
-		
+
 		<link href="styles.css" rel="stylesheet" />
-		<script src="background/background.js" defer></script>
-		
+		<script src="/background/background.js" defer></script>
+
 	</head>
-	
+
 	<body>
-		
-		<canvas id="background" data-shader="background/wave.glsl"></canvas>
-		
-		<br></br>
+		<canvas id="background" data-shader="/background/wave.glsl"></canvas>
+
+      <header class="banner">
+        <nav class="menu">
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
+          <a href="#contact">Contact</a>
+
+          <div class="account-links">
+			<?php if ($_SESSION['logged']): ?>
+				<a class="login" href="SignOut.php">Log Out</a>
+			<?php else: ?>
+				<a class="login" href="SignIn.php">Log In</a>
+			<?php endif; ?>
+						<a class="login" href="SignUp.php">Sign Up</a>
+          </div>
+        </nav>
+      </header>
+
 		<form action="LogIn.php" method="post">
 			<fieldset>
 				<h1>Log In</h1>
@@ -39,6 +53,4 @@
 			</fieldset>
 		</form>
 	</body>
-	
 </html>
-	

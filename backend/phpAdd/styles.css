@@ -1,106 +1,428 @@
-/* This is needed for coloring of the WebGL background */
 :root {
+  /* background.js reads bg-color and accent as hex, so keep them in that format */
   --bg-color: #f5f7fa;
   --text: #333333;
   --accent: #2e7d6b;
-
+  --accent-hover: #245e51;
+  --muted: #5e7167;
+  --surface: #ffffff;
+  --soft: #edf6f0;
+  --border: #c6d8cd;
+  --pane-background: rgba(245, 247, 250, 0.94);
+  --pane-shadow: 0 8px 24px rgba(25, 55, 43, 0.14);
+  --radius: 12px;
+  --space: 16px;
+  --page-width: 1500px;
   color: var(--text);
   background: var(--bg-color);
 }
 
+* {
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
 body {
   position: relative;
   z-index: 0;
-  font-family: Arial, sans-serif;
   margin: 0;
   padding: 20px;
-  line-height: 1.6;
+  font:
+    16px/1.6 Arial,
+    sans-serif;
 }
-
+h1,
+h2,
+legend {
+  color: var(--accent);
+}
 h1 {
-  color: #2e7d6b;
-  text-align: center;
+  margin: 0 0 5px;
   font-size: 36px;
-  margin-bottom: 5px;
+  text-align: center;
+}
+h1 + p {
+  margin: 0 0 24px;
+  color: var(--muted);
+  text-align: center;
+}
+h2 {
+  margin: 0 0 8px;
+  font-size: 22px;
+}
+a {
+  color: var(--accent);
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+:is(input, select, textarea, button, a):focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
 }
 
-h1 + p {
+button,
+.plan-button {
+  padding: 12px 20px;
+  border: 1px solid transparent;
+  border-radius: var(--radius);
+  background: var(--accent);
+  color: var(--surface);
+  cursor: pointer;
+}
+button:hover,
+.plan-button:hover {
+  background: var(--accent-hover);
+}
+button:disabled {
+  cursor: default;
+}
+.workout,
+.exercise {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 48px;
+  padding: 10px 12px;
+  border-color: var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
   text-align: center;
-  color: #666666;
-  margin-bottom: 30px;
+  overflow-wrap: anywhere;
+}
+.workout {
+  min-height: 80px;
+}
+.exercise {
+  min-height: 0;
+  font-size: 14px;
+  line-height: 1.3;
+  overflow: auto;
+}
+.workout:hover,
+.exercise:hover {
+  background: var(--soft);
+  border-color: var(--accent);
+}
+.workout.active {
+  background: var(--soft);
+  color: var(--accent-hover);
+  box-shadow: inset 4px 0 var(--accent);
+}
+.exercise.active {
+  background: var(--accent);
+  color: var(--surface);
+}
+.plan-button {
+  display: block;
+  text-align: center;
+  text-decoration: none;
+}
+
+.page,
+.contact-footer {
+  position: relative;
+  z-index: 1;
+  width: 95%;
+  max-width: var(--page-width);
+  margin: 3vh auto;
+  padding: var(--space);
+  background: var(--pane-background);
+}
+
+/* subtract the page margins and body padding from the viewport height */
+.page {
+  display: flex;
+  flex-direction: column;
+  min-height: calc(94vh - 40px);
+}
+.page > main {
+  flex: 1;
+}
+.banner {
+  padding: var(--space);
+  background: var(--accent);
+}
+
+.menu,
+.account-links {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+
+.menu {
+  flex-wrap: wrap;
+}
+
+.account-links {
+  margin-left: auto;
+}
+
+.banner a {
+  color: var(--surface);
+  text-decoration: none;
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  gap: 20px;
+  margin-top: var(--space);
+  min-height: 70vh;
+}
+
+.left-pane,
+.exercise-list {
+  display: grid;
+  align-content: start;
+  gap: 10px;
+}
+
+.right-pane {
+  --preview-height: clamp(320px, 48vh, 480px);
+  --title-height: 144px;
+  --details-height: 160px;
+  --exercise-height: 64px;
+  --exercise-gap: 10px;
+
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.25fr);
+  align-items: center;
+  gap: var(--space);
+  min-width: 0;
+  padding: var(--space);
+  border: 1px solid var(--border);
+  background: var(--surface);
+}
+
+.workout-controls,
+.workout-preview {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: var(--space);
+  min-width: 0;
+  min-height: 0;
+}
+
+.workout-controls > *,
+.workout-preview > * {
+  min-width: 0;
+  min-height: 0;
+}
+
+.workout-controls {
+  container-type: inline-size;
+}
+
+/* reserve each slot so changing the workout only changes its contents */
+.info {
+  flex: 0 0 var(--title-height);
+  display: grid;
+  grid-template-rows: 64px minmax(0, 1fr);
+  gap: 8px;
+  text-align: center;
+}
+
+.info h1 {
+  display: grid;
+  place-items: center;
+  margin: 0;
+  font-size: clamp(24px, 2.5vw, 36px);
+  overflow: auto;
+  overflow-wrap: anywhere;
+}
+
+.exercise-list {
+  --exercise-rows: 4;
+
+  /* empty columns keep button widths consistent */
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-auto-rows: var(--exercise-height);
+  gap: var(--exercise-gap);
+  flex: 0 0
+    calc(
+      var(--exercise-rows) * var(--exercise-height) +
+        (var(--exercise-rows) - 1) * var(--exercise-gap)
+    );
+  overflow: auto;
+  scrollbar-gutter: stable;
+}
+
+.info p,
+.exercise-details {
+  white-space: pre-line;
+  margin: 0;
+  min-height: 0;
+  color: var(--muted);
+  overflow: auto;
+  scrollbar-gutter: stable;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.exercise-title {
+  display: grid;
+  place-items: end center;
+  height: 72px;
+  flex: none;
+  margin: 0;
+  overflow: auto;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.exercise-details {
+  height: var(--details-height);
+  flex: none;
+}
+
+.media {
+  flex: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 100%;
+  min-height: 320px;
+  height: var(--preview-height);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--soft);
+}
+
+/* reserve room for four movements based on the column width */
+@container (min-width: 310px) {
+  .exercise-list {
+    --exercise-rows: 2;
+  }
+}
+
+@container (min-width: 610px) {
+  .exercise-list {
+    --exercise-rows: 1;
+  }
+}
+
+.media > img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.media-placeholder {
+  padding: 24px;
+  color: var(--muted);
+  text-align: center;
+}
+.plans-main {
+  padding: 20px 0;
+}
+.plans-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+  max-width: 900px;
+  margin: 30px auto;
+}
+.plan-card,
+form {
+  padding: 28px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+}
+.plan-card {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.plan-card.premium {
+  border-color: var(--accent);
+}
+/* let the list fill extra space so both plan buttons line up */
+.plan-card ul {
+  flex: 1;
+  margin: var(--space) 0 24px;
+  padding-left: 20px;
+}
+.plan-price {
+  margin: 12px 0;
+  font-size: 32px;
+  font-weight: bold;
+}
+.plan-price span {
+  color: var(--muted);
+  font-size: 14px;
+  font-weight: normal;
+}
+.contact-footer {
+  padding: 28px 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--pane-shadow);
+  text-align: center;
+  scroll-margin-top: 24px;
+}
+.contact-footer p {
+  margin: 8px 0 12px;
+  color: var(--muted);
+}
+.contact-footer a {
+  font-weight: 600;
+  overflow-wrap: anywhere;
 }
 
 form {
   max-width: 700px;
   margin: 0 auto;
-  background-color: white;
-  padding: 30px;
-  border-radius: 12px;
-  box-shadow: 0 2px 10px #dddddd;
+  box-shadow: var(--pane-shadow);
 }
-
 fieldset {
-  border: 1px solid #cccccc;
-  border-radius: 8px;
+  margin: 0 0 20px;
   padding: 20px;
-  margin-bottom: 20px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
 }
-
 legend {
-  font-weight: bold;
-  color: #2e7d6b;
   font-size: 20px;
+  font-weight: bold;
 }
-
 input[type="text"],
 input[type="email"],
 input[type="number"],
 input[type="password"],
 select,
 textarea {
-  padding: 10px;
-  border: 1px solid #cccccc;
-  border-radius: 5px;
-  font-family: Arial, sans-serif;
-  font-size: 14px;
-  max-width: 100%;
-  box-sizing: border-box;
-}
-
-button {
-  background-color: #2e7d6b;
-  color: white;
-  padding: 12px 20px;
-  border: none;
-  border-radius: 6px;
-  font-size: 16px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #245e51;
-}
-/* Make form fields fit their containers */
-input[type="text"],
-input[type="email"],
-status input[type="number"],
-input[type="password"],
-select,
-textarea {
   width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 14px;
 }
 
-/* Show a clear outline when using the keyboard */
-input:focus-visible,
-select:focus-visible,
-textarea:focus-visible,
-button:focus-visible {
-  outline: 3px solid #2e7d6b;
-  outline-offset: 2px;
+/* keep the canvas behind the page and let clicks reach the controls */
+#background {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  pointer-events: none;
 }
 
-/* Adjust layout for smaller screens */
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   body {
     padding: 10px;
   }
@@ -109,146 +431,29 @@ button:focus-visible {
     font-size: 28px;
   }
 
-  form {
-    padding: 15px;
+  .page {
+    min-height: calc(94vh - 20px);
   }
 
-  fieldset {
-    padding: 12px;
-  }
-
-  legend {
-    font-size: 18px;
-  }
-
-  button {
-    width: 100%;
-  }
-}
-
-/* For WebGL background formatting */
-#background {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  pointer-events: none;
-}
-
-.page {
-  position: relative;
-  z-index: 1;
-  width: 95%;
-  max-width: 1500px;
-  box-sizing: border-box;
-  margin: 3vh auto;
-  padding: 16px;
-  background: rgba(245, 247, 250, 0.85);
-}
-
-.banner {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  background: var(--accent);
-}
-
-.menu {
-  display: flex;
-  gap: 24px;
-}
-
-.banner a {
-  color: white;
-  text-decoration: none;
-}
-
-.layout {
-  display: grid;
-  grid-template-columns: 140px 1fr;
-  gap: 14px;
-  margin-top: 14px;
-  min-height: 70vh;
-}
-
-.left-pane,
-.images {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.workout {
-  flex: 1;
-  min-height: 90px;
-  background: white;
-  border: 2px dotted #333;
-}
-
-.workout.active,
-.image.active {
-  background: #55dbc3;
-}
-
-.right-pane {
-  display: grid;
-  grid-template-columns: 1fr 110px 1.3fr;
-  gap: 16px;
-  padding: 12px;
-  border: 1px solid #333;
-  background: rgba(255, 255, 255, 0.85);
-}
-
-.info {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  text-align: center;
-}
-
-.image {
-  flex: 1;
-  background: white;
-  border: 1px solid #888;
-}
-
-.media {
-  display: flex;
-  flex-direction: column;
-}
-
-.main-image {
-  flex: 1;
-  min-height: 320px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border: 1px solid #888;
-}
-
-@media (max-width: 700px) {
-  .layout {
-    grid-template-columns: 1fr;
+  .layout,
+  .right-pane,
+  .plans-grid {
+    grid-template-columns: minmax(0, 1fr);
   }
 
   .left-pane {
-    flex-direction: row;
-    overflow-x: auto;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
   }
-
   .workout {
-    min-width: 105px;
-    min-height: 70px;
+    min-height: 60px;
   }
-
-  .right-pane {
-    grid-template-columns: 1fr 1fr;
+  form,
+  fieldset {
+    padding: var(--space);
   }
-
-  .info {
-    grid-column: 1 / 3;
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
   }
 }

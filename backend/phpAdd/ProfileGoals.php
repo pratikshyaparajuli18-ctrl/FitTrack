@@ -44,6 +44,23 @@
     <!-- no touch  -->
     <canvas id="background" data-shader="background/wave.glsl"></canvas>
 
+      <header class="banner">
+        <nav class="menu">
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
+          <a href="#contact">Contact</a>
+
+          <div class="account-links">
+			<?php if ($_SESSION['logged']): ?>
+				<a class="login" href="SignOut.php">Log Out</a>
+			<?php else: ?>
+				<a class="login" href="SignIn.php">Log In</a>
+			<?php endif; ?>
+						<a class="login" href="SignUp.php">Sign Up</a>
+          </div>
+        </nav>
+      </header>
+
     <h1>FitTrack</h1>
     <p>Personal Fitness Profile and Goals</p>
     <form>
