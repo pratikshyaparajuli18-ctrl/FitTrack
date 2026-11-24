@@ -35,7 +35,9 @@ if ($_SESSION['userkey'] != '') {
           <a href="index.php">Home</a>
           <a href="plans.php">Plans</a>
           <a href="#contact">Contact</a>
+			<?php if($_SESSION['logged'] == true): ?>
           <a href="ProfileGoals.php">Workout Goals</a>
+			<?php endif; ?>
 
           <div class="account-links">
 			<?php if ($_SESSION['logged']): ?>
