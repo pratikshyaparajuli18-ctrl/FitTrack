@@ -1,4 +1,6 @@
 <?php
+
+	session_start();
 	//check for form submission
 	if(isset($_POST['submit'])) {
 		require_once('FTDBconn.php');
