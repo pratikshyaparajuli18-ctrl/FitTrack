@@ -5,12 +5,14 @@ function hexToVec3(hex) {
   return [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
 }
 
+const background_base = new URL("./", document.currentScript.src);
+
 async function main() {
   const canvas = document.querySelector("#background");
   const gl = canvas.getContext("webgl2", { alpha: true });
 
   // splitting up the glsl file into fragment and vertex
-  const response = await fetch(canvas.dataset.shader);
+  const response = await fetch(new URL(canvas.dataset.shader, background_base));
   if (!response.ok) throw new Error("Shader HTTP ${response.status}");
   const source = await response.text();
 

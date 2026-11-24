@@ -20,29 +20,29 @@ if ($_SESSION['userkey'] != '') {
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>FitTrack</title>
-    <link rel="stylesheet" href="/phpAdd/styles.css" />
-    <script src="/phpAdd/background/background.js" defer></script>
-    <script src="/phpAdd/index.js" defer></script>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="background/background.js" defer></script>
+    <script src="index.js" defer></script>
   </head>
   <body>
-    <canvas id="background" data-shader="/phpAdd/background/wave.glsl"></canvas>
+    <canvas id="background" data-shader="background/wave.glsl"></canvas>
     <!-- background.js looks for this if the animation cannot load -->
     <div id="shader-error" hidden></div>
 
     <div class="page">
       <header class="banner">
         <nav class="menu">
-          <a href="/phpAdd/index.php">Home</a>
-          <a href="/phpAdd/plans.php">Plans</a>
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
           <a href="#contact">Contact</a>
 
           <div class="account-links">
 			<?php if ($_SESSION['logged']): ?>
-				<a class="login" href="/phpAdd/SignOut.php">Log Out</a>
+				<a class="login" href="SignOut.php">Log Out</a>
 			<?php else: ?>
-				<a class="login" href="/phpAdd/SignIn.php">Log In</a>
+				<a class="login" href="SignIn.php">Log In</a>
 			<?php endif; ?>
-						<a class="login" href="/phpAdd/SignUp.php">Sign Up</a>
+						<a class="login" href="SignUp.php">Sign Up</a>
           </div>
         </nav>
       </header>

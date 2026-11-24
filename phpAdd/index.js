@@ -5,7 +5,9 @@ const element = (tag, text, class_name = "") =>
     textContent: text,
     className: class_name,
   });
-const asset_base = new URL("/phpAdd/images-db/", document.baseURI);
+
+const app_base = new URL("./", document.currentScript.src);
+const asset_base = new URL("images-db/", app_base);
 const workout_list = $(".left-pane"),
   exercise_list = $("#exercise-list"),
   preview = $("#current-image");
@@ -179,7 +181,7 @@ async function animate_images(exercise) {
 async function load_workouts() {
   // a failed image catalog should not discard the workout definitions
   const [routine_data, exercise_data] = await Promise.allSettled([
-    fetch_json("/phpAdd/workouts.json"),
+    fetch_json(new URL("workouts.json", app_base)),
     fetch_json(new URL("exercises.json", asset_base)),
   ]);
   if (routine_data.status === "rejected") throw routine_data.reason;

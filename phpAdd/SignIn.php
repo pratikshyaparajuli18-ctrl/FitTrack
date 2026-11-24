@@ -8,32 +8,32 @@
 		<meta charset="UTF-8">
 		<title>FitTrack - Log In Page</title>
 
-		<link href="/phpAdd/styles.css" rel="stylesheet" />
-		<script src="/phpAdd/background/background.js" defer></script>
+		<link href="styles.css" rel="stylesheet" />
+		<script src="background/background.js" defer></script>
 
 	</head>
 
 	<body>
-		<canvas id="background" data-shader="/phpAdd/background/wave.glsl"></canvas>
+		<canvas id="background" data-shader="background/wave.glsl"></canvas>
 
       <header class="banner">
         <nav class="menu">
-          <a href="/phpAdd/index.php">Home</a>
-          <a href="/phpAdd/plans.php">Plans</a>
+          <a href="index.php">Home</a>
+          <a href="plans.php">Plans</a>
           <a href="#contact">Contact</a>
 
           <div class="account-links">
 			<?php if ($_SESSION['logged']): ?>
-				<a class="login" href="/phpAdd/SignOut.php">Log Out</a>
+				<a class="login" href="SignOut.php">Log Out</a>
 			<?php else: ?>
-				<a class="login" href="/phpAdd/SignIn.php">Log In</a>
+				<a class="login" href="SignIn.php">Log In</a>
 			<?php endif; ?>
-						<a class="login" href="/phpAdd/SignUp.php">Sign Up</a>
+						<a class="login" href="SignUp.php">Sign Up</a>
           </div>
         </nav>
       </header>
 
-		<form action="/phpAdd/LogIn.php" method="post">
+		<form action="LogIn.php" method="post">
 			<fieldset>
 				<h1>Log In</h1>
 				<br>
@@ -48,7 +48,7 @@
 					<br>
 				<?php endif; ?>
 				<br>
-				<p><a href="/phpAdd/SignUp.php">don't have an account?</a></p>
+				<p><a href="SignUp.php">don't have an account?</a></p>
 				<button type="submit" name="submit">Log In</button>
 			</fieldset>
 		</form>
