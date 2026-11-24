@@ -5,10 +5,7 @@ const element = (tag, text, class_name = "") =>
     textContent: text,
     className: class_name,
   });
-const asset_base = new URL(
-  "/backend/exercises/exercise-images/",
-  document.baseURI,
-);
+const asset_base = new URL("/phpAdd/images-db/", document.baseURI);
 const workout_list = $(".left-pane"),
   exercise_list = $("#exercise-list"),
   preview = $("#current-image");
@@ -94,7 +91,7 @@ function select_workout(index) {
     `${count} ${count === 1 ? "exercise" : "exercises"}`,
   ]
     .filter(Boolean)
-    .join(" · ");
+    .join("\n");
   render_buttons(
     exercise_list,
     workout.exercises.map((e) => exercise_label(e.exercise_id)),
@@ -130,7 +127,7 @@ function select_exercise(index) {
     .map(([label, value]) => `${label}: ${value}`);
   if (entry.notes) details.push(entry.notes);
   $("#exercise-info").textContent =
-    details.join(" · ") || "Exercise details are unavailable.";
+    details.join("\n") || "Exercise details are unavailable.";
   animate_images(exercise);
 }
 
@@ -182,7 +179,7 @@ async function animate_images(exercise) {
 async function load_workouts() {
   // a failed image catalog should not discard the workout definitions
   const [routine_data, exercise_data] = await Promise.allSettled([
-    fetch_json("/frontend/home/workouts.json"),
+    fetch_json("/phpAdd/workouts.json"),
     fetch_json(new URL("exercises.json", asset_base)),
   ]);
   if (routine_data.status === "rejected") throw routine_data.reason;
