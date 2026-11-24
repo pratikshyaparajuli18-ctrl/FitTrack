@@ -25,7 +25,7 @@ if ($_SESSION['userkey'] != '') {
     <script src="index.js" defer></script>
   </head>
   <body>
-    <canvas id="background" data-shader="background/wave.glsl"></canvas>
+    <canvas id="background" data-shader="wave.glsl"></canvas>
     <!-- background.js looks for this if the animation cannot load -->
     <div id="shader-error" hidden></div>
 

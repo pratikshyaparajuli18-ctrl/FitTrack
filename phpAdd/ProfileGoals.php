@@ -38,7 +38,7 @@
   </head>
   <body>
     <!-- no touch  -->
-    <canvas id="background" data-shader="background/wave.glsl"></canvas>
+    <canvas id="background" data-shader="wave.glsl"></canvas>
 
       <header class="banner">
         <nav class="menu">
